@@ -16,7 +16,7 @@ export const Search = ({ send }) => {
 
     const goToPassengers = () => {
         console.log("continuando")
-        send({ type: "CONTINUE" })
+        send({ type: "CONTINUE", selectedCountry: flight })
     }
 
     return (

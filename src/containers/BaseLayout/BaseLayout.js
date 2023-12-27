@@ -13,9 +13,16 @@ export const BaseLayout = () => {
     // console.log('matches false', state.matches('tickets'));
     // console.log('can', state.can('FINISH'));
 
+    // para leer el estado actual de la maquina:
     useEffect(() => {
         console.log("ESTADO ACTUAL MAQUINA: ", state.value)
+        console.log("CONTEXTO ACTUAL: ", state.context)
     }, [state])
+
+    // para leer el contexto de la maquina: 
+    // console.log(state.context)
+
+
     return (
         <div className='BaseLayout'>
             <Nav state={state} send={send} />

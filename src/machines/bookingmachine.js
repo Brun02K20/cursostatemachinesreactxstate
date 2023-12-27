@@ -1,4 +1,4 @@
-import { createMachine } from 'xstate'; // importo la uncionalidad para crear maquinas de estado de xstate
+import { assign, createMachine } from 'xstate'; // importo la uncionalidad para crear maquinas de estado de xstate
 
 // creo la maquina de estados y la almaceno en una variable
 const bookingMachine = createMachine({
@@ -6,25 +6,40 @@ const bookingMachine = createMachine({
     initial: 'initial',
     states: {
         initial: {
+            entry: assign({
+                selectedCountry: '',
+                pasajeros: []
+            }),
             on: {
                 START: {
                     target: "search",
-                    actions: "imprimirInicio"
+                    // actions: "imprimirInicio"
                 }
             }
         },
         search: {
-            entry: "imprimirEntrada",
-            exit: "imprimirSalida",
+            // entry: "imprimirEntrada",
+            // exit: "imprimirSalida",
             on: {
-                CONTINUE: "passengers",
+                CONTINUE: {
+                    target: "passengers", // assign se usa para cambiar el valor del contexto de la ME
+                    actions: assign({
+                        selectedCountry: ({ event }) => event.selectedCountry,
+                    })
+                },
                 CANCEL: "initial",
             },
         },
         passengers: {
             on: {
                 DONE: 'tickets',
-                CANCEL: 'initial'
+                CANCEL: 'initial',
+                ADD: {
+                    target: "passengers", // aca declaro una autotransicion
+                    actions: assign({
+                        pasajeros: ({ context, event }) => [...context.pasajeros, event.newPassenger],
+                    })
+                }
             }
         },
         tickets: {
@@ -33,6 +48,11 @@ const bookingMachine = createMachine({
             }
         },
     },
+    // asi declaro un contexto inicial de la ME
+    context: {
+        pasajeros: [],// declaro que va a tener un array de pasaeros para ir almacenando los nombres de los pasajeros
+        selectedCountry: '' // para almacenar el pais elegido
+    }
 }, { // asi se declaran las acciones
     actions: {
         imprimirInicio: () => console.log("Iniciando la compra de los boletos"),

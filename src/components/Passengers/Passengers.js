@@ -10,6 +10,8 @@ export const Passengers = ({ state, send }) => {
 
     const submit = (e) => {
         e.preventDefault();
+        console.log("probando esta gilada: ", state)
+        send({ type: "ADD", newPassenger: value })
         changeValue('');
     }
 
@@ -20,6 +22,9 @@ export const Passengers = ({ state, send }) => {
     return (
         <form onSubmit={submit} className='Passengers'>
             <p className='Passengers-title title'>Agrega a las personas que van a volar ✈️</p>
+            {state && state.context.pasajeros.map((e, index) => (
+                <li key={index}>{e}</li>
+            ))}
             <input
                 id="name"
                 name="name"
