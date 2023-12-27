@@ -1,5 +1,5 @@
 import './App.css';
-import { BaseLayout } from './components/BaseLayout/BaseLayout.js';
+import { BaseLayout } from './containers/BaseLayout/BaseLayout';
 
 function App() {
   return (
