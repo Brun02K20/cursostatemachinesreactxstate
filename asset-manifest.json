@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/cursostatemachinesreactxstate/static/css/main.b9360814.css",
+    "main.js": "/cursostatemachinesreactxstate/static/js/main.15b3fabd.js",
+    "static/js/787.fc760d31.chunk.js": "/cursostatemachinesreactxstate/static/js/787.fc760d31.chunk.js",
+    "static/media/background-travel-2.jpg": "/cursostatemachinesreactxstate/static/media/background-travel-2.1b3bc05ab3ab53a29ab2.jpg",
+    "index.html": "/cursostatemachinesreactxstate/index.html",
+    "main.b9360814.css.map": "/cursostatemachinesreactxstate/static/css/main.b9360814.css.map",
+    "main.15b3fabd.js.map": "/cursostatemachinesreactxstate/static/js/main.15b3fabd.js.map",
+    "787.fc760d31.chunk.js.map": "/cursostatemachinesreactxstate/static/js/787.fc760d31.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.b9360814.css",
+    "static/js/main.15b3fabd.js"
+  ]
+}
