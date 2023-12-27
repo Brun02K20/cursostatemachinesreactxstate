@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useMachine } from '@xstate/react';
 import { Nav } from '../../components/Nav/Nav.js';
 import { StepsLayout } from '../StepsLayout/StepsLayout.js';
@@ -8,14 +8,18 @@ import './BaseLayout.css';
 export const BaseLayout = () => {
     const [state, send] = useMachine(bookingMachine);
 
-    console.log('nuestra maquina', state);
-    console.log('matches true', state.matches('initial'));
-    console.log('matches false', state.matches('tickets'));
-    console.log('can', state.can('FINISH'));
+    // console.log('nuestra maquina', state);
+    // console.log('matches true', state.matches('initial'));
+    // console.log('matches false', state.matches('tickets'));
+    // console.log('can', state.can('FINISH'));
+
+    useEffect(() => {
+        console.log("ESTADO ACTUAL MAQUINA: ", state.value)
+    }, [state])
     return (
         <div className='BaseLayout'>
-            <Nav />
-            <StepsLayout />
+            <Nav state={state} send={send} />
+            <StepsLayout send={send} state={state} />
         </div>
     );
 }
