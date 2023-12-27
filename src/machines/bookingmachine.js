@@ -1,4 +1,5 @@
-import { assign, createMachine } from 'xstate'; // importo la uncionalidad para crear maquinas de estado de xstate
+import { assign, createMachine, fromPromise } from 'xstate'; // importo la uncionalidad para crear maquinas de estado de xstate
+import { getCountries } from '../services/countries.js';
 
 
 // esta es la ME hija
@@ -6,9 +7,28 @@ const fillCountries = {
     initial: 'loading',
     states: {
         loading: {
-            on: {
-                DONE: 'success',
-                ERROR: 'failure'
+            // invoke se usa para llamar a un servicio
+            invoke: {
+                id: "getCountries",
+                src: fromPromise(async () => { // llamo a mi servicio y traigo los datos para aca para la ME
+                    const data = await getCountries() // llamo al servicio
+                    console.log("paises traidos en fuente: ", data) // consoleo
+                    return data // retorno
+                }),
+                // cuando el servicio finalice con exito
+                onDone: {
+                    target: "success",
+                    actions: assign({
+                        countries: (context, event) => context.event.output, // Asigno lo traido en el servicio al contexto
+                    }),
+                },
+                // cuando el servicio finalice sin exito
+                onError: {
+                    target: "failure",
+                    actions: assign({
+                        error: "No funciono la request a los paises"
+                    })
+                }
             }
         },
         success: {},
@@ -29,7 +49,9 @@ const bookingMachine = createMachine({
         initial: {
             entry: assign({
                 selectedCountry: '',
-                pasajeros: []
+                pasajeros: [],
+                countries: [],
+                error: ""
             }),
             on: {
                 START: {
@@ -65,6 +87,12 @@ const bookingMachine = createMachine({
             }
         },
         tickets: {
+            // transicion que se ejecute despues de cierto tiempo
+            after: {
+                5000: {
+                    target: "initial",
+                }
+            },
             on: {
                 FINISH: 'initial'
             }
@@ -73,7 +101,9 @@ const bookingMachine = createMachine({
     // asi declaro un contexto inicial de la ME
     context: {
         pasajeros: [],// declaro que va a tener un array de pasaeros para ir almacenando los nombres de los pasajeros
-        selectedCountry: '' // para almacenar el pais elegido
+        selectedCountry: '', // para almacenar el pais elegido
+        countries: [],
+        error: ""
     }
 }, { // asi se declaran las acciones
     actions: {
