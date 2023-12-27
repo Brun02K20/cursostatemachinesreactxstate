@@ -76,7 +76,10 @@ const bookingMachine = createMachine({
         },
         passengers: {
             on: {
-                DONE: 'tickets',
+                DONE: {
+                    target: "tickets",
+                    guard: "moreThanOnePassenger" // declaro que hay una conficion de guarda en esta transicion
+                },
                 CANCEL: 'initial',
                 ADD: {
                     target: "passengers", // aca declaro una autotransicion
@@ -110,6 +113,11 @@ const bookingMachine = createMachine({
         imprimirInicio: () => console.log("Iniciando la compra de los boletos"),
         imprimirEntrada: () => console.log("Imprimir entrada a search"),
         imprimirSalida: () => console.log("Imprimir salida del search"),
+    },
+    guards: {
+        moreThanOnePassenger: (context) => {
+            return context.context.pasajeros.length > 0
+        }
     }
 })
 
