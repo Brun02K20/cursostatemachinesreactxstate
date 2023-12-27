@@ -7,14 +7,19 @@ const bookingMachine = createMachine({
     states: {
         initial: {
             on: {
-                START: 'search'
+                START: {
+                    target: "search",
+                    actions: "imprimirInicio"
+                }
             }
         },
         search: {
+            entry: "imprimirEntrada",
+            exit: "imprimirSalida",
             on: {
-                CONTINUE: 'passengers',
-                CANCEL: 'initial'
-            }
+                CONTINUE: "passengers",
+                CANCEL: "initial",
+            },
         },
         passengers: {
             on: {
@@ -27,7 +32,34 @@ const bookingMachine = createMachine({
                 FINISH: 'initial'
             }
         },
+    },
+}, { // asi se declaran las acciones
+    actions: {
+        imprimirInicio: () => console.log("Iniciando la compra de los boletos"),
+        imprimirEntrada: () => console.log("Imprimir entrada a search"),
+        imprimirSalida: () => console.log("Imprimir salida del search"),
     }
 })
 
 export { bookingMachine }
+
+// aca lo que va a ocurrir es que en el estado X, en el evento Y, al iniciar la transicion se va a ejecutar la accion que tiene tal nombre
+// nombreEstado: {
+//     on: {
+//         nnEvento: {
+//             target: "estadoAlQueVa",
+//             actions: "nombreAccion"
+//         }
+//     }
+// }
+
+// En el estado SEARCH, cuando se entra al estado se ejecuta la accion de imprimir entrada, y cuando se sale del estado, se ejecuta imprimir salida
+// search: {
+//     entry: "imprimirEntrada",
+//     exit: "imprimirSalida",
+//     on: {
+//         CONTINUE: "passengers",
+//         CANCEL: "inicial",
+//     },
+// },
+
