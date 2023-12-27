@@ -1,5 +1,26 @@
 import { assign, createMachine } from 'xstate'; // importo la uncionalidad para crear maquinas de estado de xstate
 
+
+// esta es la ME hija
+const fillCountries = {
+    initial: 'loading',
+    states: {
+        loading: {
+            on: {
+                DONE: 'success',
+                ERROR: 'failure'
+            }
+        },
+        success: {},
+        failure: {
+            on: {
+                RETRY: { target: 'loading' }
+            }
+        }
+    }
+}
+
+
 // creo la maquina de estados y la almaceno en una variable
 const bookingMachine = createMachine({
     id: 'buy plane tickets',
@@ -29,6 +50,7 @@ const bookingMachine = createMachine({
                 },
                 CANCEL: "initial",
             },
+            ...fillCountries // asi XSTATE entiende que va a ser la ME hija en este estado
         },
         passengers: {
             on: {
@@ -58,6 +80,47 @@ const bookingMachine = createMachine({
         imprimirInicio: () => console.log("Iniciando la compra de los boletos"),
         imprimirEntrada: () => console.log("Imprimir entrada a search"),
         imprimirSalida: () => console.log("Imprimir salida del search"),
+    }
+})
+
+
+// creo una maquina paralela a la bookingMachine
+const fileMachine = createMachine({
+    id: 'archivos',
+    type: 'parallel', // asi le indico al xstate que van a ser maquinas paralelas, que no tienen relacion una con la otra
+    states: {
+        upload: {
+            initial: 'inicial',
+            states: {
+                inicial: {
+                    on: {
+                        INIT_UPLOAD: { target: 'cargando' }
+                    }
+                },
+                cargando: {
+                    on: {
+                        UPLOAD_COMPLETE: { target: 'terminado' }
+                    }
+                },
+                terminado: {}
+            }
+        },
+        download: {
+            initial: 'inicial',
+            states: {
+                inicial: {
+                    on: {
+                        INIT_DOWNLOAD: { target: 'cargando' }
+                    }
+                },
+                cargando: {
+                    on: {
+                        DOWNLOAD_COMPLETE: { target: 'terminado' }
+                    }
+                },
+                terminado: {}
+            }
+        }
     }
 })
 
